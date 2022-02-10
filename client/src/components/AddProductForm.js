@@ -1,5 +1,7 @@
 import React from "react"
 import { useState } from "react";
+import { SERVICES } from "../services";
+import { useDispatch } from "react-redux";
 
 const AddProductForm = ({onAddProduct, products, setProducts}) => {
   const [isVisible, setVisibility] = useState(false)
@@ -7,22 +9,31 @@ const AddProductForm = ({onAddProduct, products, setProducts}) => {
   const [price, setPrice] = useState(0)
   const [quantity, setQuantity] = useState(0)
 
+  const dispatch = useDispatch();
+
   const toggleForm = () => {
     setVisibility(!isVisible)
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onAddProduct(setProducts, products, {
+    let response = await SERVICES.handleAddProduct({
       title: productName,
       price,
       quantity
     });
+
+    dispatch({
+      type: "PRODUCT_ADDED",
+      addedProduct: response
+    });
+
     setProductName("");
     setPrice(0);
     setQuantity(0);
     toggleForm();
   }
+
 
   return (
     <>

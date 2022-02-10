@@ -1,6 +1,23 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { SERVICES } from "../services";
+import { useEffect } from "react";
 
-const Cart = ({ cartItems, onCheckOut, setCartItems }) => {
+const Cart = ({onCheckOut, setCartItems }) => {
+  const dispatch = useDispatch();
+  const cartItems = useSelector((state) => state.cartItems);
+
+  useEffect(() => {
+    const getCartItems = async () => {
+      let response = await SERVICES.getCartItems();
+      dispatch({
+        type: "CART_ITEMS_RECEIVED",
+        payload: response
+      })
+    }
+    getCartItems();
+  }, [dispatch]);
+
   if (cartItems.length === 0) {
     return (
       <div class="cart">

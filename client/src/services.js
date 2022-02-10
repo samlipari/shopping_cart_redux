@@ -3,39 +3,32 @@ import axios from "axios";
 export const SERVICES = {
   getProducts: async (setProducts) => {
     let response = await axios.get("api/products")
-    setProducts(response.data);
+    return response.data;
   },
   
-  getCartItems: async (setCartItems) => {
+  getCartItems: async () => {
     let response = await axios.get("api/cart")
-    setCartItems(response.data);
+    return response.data;
   },
 
-  handleAddProduct: async (setProducts, products, newProduct) => {
+  handleAddProduct: async (newProduct) => {
     const response = await axios.post("/api/products", { ...newProduct });
     const data = response.data;
-    setProducts(products.concat(data));
+    return data;
   },
 
-  handleDelete: async (id, setProducts, products) => {
+  handleDelete: async (id) => {
     const response = await axios.delete(`/api/products/${id}`);
     if (response.status === 200) {
-      setProducts(products.filter(product => id !== product._id));
+      return response.status;
     } else {
       console.log("Product was not deleted.")
     }
   },
 
-  handleEdit: async (updatedProduct, setProducts, products) => {
+  handleEdit: async (updatedProduct) => {
     const response = await axios.put(`/api/products/${updatedProduct._id}`, updatedProduct);
-    const data = response.data;
-    setProducts(products.map(record => {
-      if (record._id === updatedProduct._id) {
-        return data
-      } else {
-        return record
-      }
-    }));
+    return response.data;
   },
 
   handleAddToCart: async (id, setProducts, products, setCartItems, cartItems) => {

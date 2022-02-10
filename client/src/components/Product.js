@@ -1,11 +1,33 @@
 import React from "react";
 import {useState} from "react"
+import { useDispatch } from "react-redux";
+import { SERVICES } from "../services";
 
 const Product = (props) => {
   const [productName, setProductName] = useState(props.title)
   const [price, setPrice] = useState(props.price)
   const [quantity, setQuantity] = useState(props.quantity)
   const [isVisible, setEditVisibility] = useState(false)
+
+  const dispatch = useDispatch();
+
+  const onDelete = async (id) => {
+    let response = await SERVICES.handleDelete(id);
+    if (response === 200) {
+      dispatch({
+        type: "PRODUCT_DELETED",
+        idToDelete: id
+      });
+    }
+  }
+
+  const handleEdit = async (updatedProduct) => {
+    let response = await SERVICES.handleEdit(updatedProduct);
+    dispatch({
+      type: "PRODUCT_EDITED",
+      editedProduct: response
+    });
+  }
 
   let updatedProduct = {
     "_id": props.id,
@@ -29,7 +51,7 @@ const Product = (props) => {
             <a href="/#" className={quantity > 0 ? "button add-to-cart" : "button add-to-cart disabled"} onClick={() => props.handleAddToCart(props.id, props.setProducts, props.products, props.setCartItems, props.cartItems)}>Add to Cart</a>
             <a href="/#" class="button edit" onClick={toggleEdit}>Edit</a>
           </div>
-          <a href="/#" class="delete-button" onClick={() => props.onDelete(props.id, props.setProducts, props.products)}><span>X</span></a>
+          <a href="/#" class="delete-button" onClick={() => onDelete(props.id)}><span>X</span></a>
         </div>
       </div>
       <div className={isVisible ? "edit-form" : "edit-form invisible"}>
@@ -51,7 +73,7 @@ const Product = (props) => {
               </div>
 
               <div class="actions form-actions">
-                <a href="/#" class="button" onClick={() => {props.onEdit(updatedProduct, props.setProducts, props.products); toggleEdit()}}>Update</a>
+                <a href="/#" class="button" onClick={() => {handleEdit(updatedProduct); toggleEdit()}}>Update</a>
                 <a href="/#" class="button" onClick={toggleEdit}>Cancel</a>
               </div>
             </form>
