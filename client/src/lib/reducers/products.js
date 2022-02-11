@@ -25,6 +25,15 @@ const products = (state = [], action) => {
             state = state.concat(action.addedProduct);
             return state;
         }
+        case "PRODUCT_IN_CART": {
+            return state.map(record => {
+                if (record._id === action.product._id) {
+                  return action.product
+                } else {
+                  return record
+                }
+            })
+        }
         default: {
             return state;
         }

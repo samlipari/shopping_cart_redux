@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { SERVICES } from "../services";
 import { useEffect } from "react";
 
-const Inventory = ({onAddToCart, cartItems, setCartItems}) => {
+const Inventory = () => {
   const dispatch = useDispatch();
   const products = useSelector((state) => state.products);
 
@@ -25,7 +25,7 @@ const Inventory = ({onAddToCart, cartItems, setCartItems}) => {
     <ul>
       {products.map(product => {
         return (
-          <Product key={product._id} products={products} id={product._id} title={product.title} price={product.price} quantity={product.quantity} cartItems={cartItems} setCartItems={setCartItems} handleAddToCart={onAddToCart}/>
+          <Product key={product._id} products={products} id={product._id} title={product.title} price={product.price} quantity={product.quantity} />
         )
       })}
     </ul>

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { SERVICES } from "../services";
 import { useEffect } from "react";
 
-const Cart = ({onCheckOut, setCartItems }) => {
+const Cart = () => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cartItems);
 
@@ -17,6 +17,17 @@ const Cart = ({onCheckOut, setCartItems }) => {
     }
     getCartItems();
   }, [dispatch]);
+
+  const onCheckOut = async () => {
+    let response = await SERVICES.handleCheckout();
+    if (response.status === 200) {
+      dispatch({
+        type: "CART_CHECKED_OUT",
+      });
+    } else {
+      console.log("Cannot checkout");
+    }
+  }
 
   if (cartItems.length === 0) {
     return (
@@ -53,7 +64,7 @@ const Cart = ({onCheckOut, setCartItems }) => {
               <td colspan="3" class="total">Total: ${total} </td>
             </tr>
           </table>
-          <a href="/#" class="button checkout" onClick={() => onCheckOut(setCartItems)}>Checkout</a>
+          <a href="/#" class="button checkout" onClick={() => onCheckOut()}>Checkout</a>
         </div>
     )
   }

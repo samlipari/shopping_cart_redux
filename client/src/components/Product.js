@@ -1,6 +1,6 @@
 import React from "react";
 import {useState} from "react"
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { SERVICES } from "../services";
 
 const Product = (props) => {
@@ -10,6 +10,8 @@ const Product = (props) => {
   const [isVisible, setEditVisibility] = useState(false)
 
   const dispatch = useDispatch();
+  const products = useSelector((state) => state.products);
+  const cartItems = useSelector((state) => state.cartItems);
 
   const onDelete = async (id) => {
     let response = await SERVICES.handleDelete(id);
@@ -27,6 +29,18 @@ const Product = (props) => {
       type: "PRODUCT_EDITED",
       editedProduct: response
     });
+  }
+
+  const handleAddToCart = async (id, products, cartItems) => {
+    let response = await SERVICES.handleAddToCart(id, products, cartItems);
+    if (response.status === 200) {
+      dispatch({
+        type: "PRODUCT_IN_CART",
+        id: id,
+        product: response.data.product,
+        cartItem: response.data.item
+      });
+    }
   }
 
   let updatedProduct = {
@@ -48,7 +62,7 @@ const Product = (props) => {
           <p class="price">{props.price}</p>
           <p class="quantity">{props.quantity} left in stock</p>
           <div class="actions product-actions">
-            <a href="/#" className={quantity > 0 ? "button add-to-cart" : "button add-to-cart disabled"} onClick={() => props.handleAddToCart(props.id, props.setProducts, props.products, props.setCartItems, props.cartItems)}>Add to Cart</a>
+            <a href="/#" className={quantity > 0 ? "button add-to-cart" : "button add-to-cart disabled"} onClick={() => handleAddToCart(props.id, products, cartItems)}>Add to Cart</a>
             <a href="/#" class="button edit" onClick={toggleEdit}>Edit</a>
           </div>
           <a href="/#" class="delete-button" onClick={() => onDelete(props.id)}><span>X</span></a>

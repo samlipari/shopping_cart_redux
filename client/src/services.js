@@ -31,7 +31,7 @@ export const SERVICES = {
     return response.data;
   },
 
-  handleAddToCart: async (id, setProducts, products, setCartItems, cartItems) => {
+  handleAddToCart: async (id, products) => {
     let productToAdd = products.filter(product => {
       return product._id === id
     })[0];
@@ -46,44 +46,14 @@ export const SERVICES = {
 
     if (quantity > 0) {
       const response = await axios.post("/api/add-to-cart", productToAdd);
-      console.log(response);
-      const cartItem = response.data.item;
-      const product = response.data.product
-
-      if (response.status === 200) {
-        let cartItemExists = cartItems.filter(item => item.productId === id);
-        if (cartItemExists.length > 0) {
-          setCartItems(cartItems.map(record => {
-            console.log("idInCart ", record.productId, "addedItemId ", id)
-            if (record.productId === id) {
-              return cartItem
-            } else {
-              return record
-            }
-          }));
-        } else {
-          setCartItems(cartItems.concat(cartItem));
-        }
-
-        setProducts(products.map(record => {
-          if (record._id === id) {
-            return product
-          } else {
-            return record
-          }
-        }));
-      } else {
-        console.log("Not added to cart");
-      }
+      return response;
+    } else {
+      console.log("Not added to cart");
     } 
   },
 
-  handleCheckout: async (setCartItems) => {
+  handleCheckout: async () => {
     const response = await axios.post("api/checkout");
-    if (response.status === 200) {
-      setCartItems([])
-    } else {
-      console.log("Cannot checkout");
-    }
+    return response;
   }
 }
