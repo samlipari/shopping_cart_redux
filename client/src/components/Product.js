@@ -1,7 +1,7 @@
 import React from "react";
 import {useState} from "react"
 import { useDispatch, useSelector } from "react-redux";
-import { SERVICES } from "../services";
+import { productsDeleted, productEdited, productAddedToCart } from "../actions/productsActions"
 
 const Product = (props) => {
   const [productName, setProductName] = useState(props.title)
@@ -13,34 +13,16 @@ const Product = (props) => {
   const products = useSelector((state) => state.products);
   const cartItems = useSelector((state) => state.cartItems);
 
-  const onDelete = async (id) => {
-    let response = await SERVICES.handleDelete(id);
-    if (response === 200) {
-      dispatch({
-        type: "PRODUCT_DELETED",
-        idToDelete: id
-      });
-    }
+  const onDelete = (id) => {
+    dispatch(productsDeleted(id));
   }
 
-  const handleEdit = async (updatedProduct) => {
-    let response = await SERVICES.handleEdit(updatedProduct);
-    dispatch({
-      type: "PRODUCT_EDITED",
-      editedProduct: response
-    });
+  const handleEdit = (updatedProduct) => {
+    dispatch(productEdited(updatedProduct));
   }
 
-  const handleAddToCart = async (id, products, cartItems) => {
-    let response = await SERVICES.handleAddToCart(id, products, cartItems);
-    if (response.status === 200) {
-      dispatch({
-        type: "PRODUCT_IN_CART",
-        id: id,
-        product: response.data.product,
-        cartItem: response.data.item
-      });
-    }
+  const handleAddToCart = (id, products, cartItems) => {
+    dispatch(productAddedToCart(id, products, cartItems));
   }
 
   let updatedProduct = {

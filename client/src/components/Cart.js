@@ -1,32 +1,18 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { SERVICES } from "../services";
 import { useEffect } from "react";
+import { getCartItems, cartCheckedOut } from "../actions/cartActions";
 
 const Cart = () => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cartItems);
 
   useEffect(() => {
-    const getCartItems = async () => {
-      let response = await SERVICES.getCartItems();
-      dispatch({
-        type: "CART_ITEMS_RECEIVED",
-        payload: response
-      })
-    }
-    getCartItems();
+    dispatch(getCartItems())
   }, [dispatch]);
 
-  const onCheckOut = async () => {
-    let response = await SERVICES.handleCheckout();
-    if (response.status === 200) {
-      dispatch({
-        type: "CART_CHECKED_OUT",
-      });
-    } else {
-      console.log("Cannot checkout");
-    }
+  const onCheckOut = () => {
+    dispatch(cartCheckedOut());
   }
 
   if (cartItems.length === 0) {

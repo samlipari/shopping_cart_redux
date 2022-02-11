@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const SERVICES = {
-  getProducts: async (setProducts) => {
+  getProducts: async () => {
     let response = await axios.get("api/products")
     return response.data;
   },

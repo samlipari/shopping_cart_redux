@@ -1,22 +1,15 @@
 import React from "react";
 import Product from "./Product"
 import { useDispatch, useSelector } from "react-redux";
-import { SERVICES } from "../services";
 import { useEffect } from "react";
+import { productsReceived } from "../actions/productsActions";
 
 const Inventory = () => {
   const dispatch = useDispatch();
   const products = useSelector((state) => state.products);
 
   useEffect(() => {
-    const getProducts = async () => {
-      let response = await SERVICES.getProducts();
-      dispatch({
-        type: "PRODUCTS_RECEIVED",
-        payload: response
-      })
-    }
-    getProducts();
+    dispatch(productsReceived());
   }, [dispatch])
 
   return (
