@@ -1,5 +1,4 @@
 import { SERVICES } from "../services"
-//import { useDispatch } from "react-redux";
 
 const productsReceivedSuccess = (response) => {
   return { type: "PRODUCTS_RECEIVED", payload: response };
@@ -21,8 +20,6 @@ const productAddedToCartSuccess = (id, response) => {
     cartItem: response.data.item
   };
 };
-
-//const dispatch = useDispatch()
 
 export const productsReceived = () => {
   return async (dispatch) => {
