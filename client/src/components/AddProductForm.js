@@ -1,15 +1,16 @@
 import React from "react"
-import { useState } from "react";
-import { SERVICES } from "../services";
-import { useDispatch } from "react-redux";
+import { useState, useContext } from "react";
+import { ProductContext } from "../context/productsContext";
+import { productAddedToInventory } from "../actions/productsActions";
 
-const AddProductForm = ({onAddProduct, products, setProducts}) => {
+const AddProductForm = () => {
   const [isVisible, setVisibility] = useState(false)
   const [productName, setProductName] = useState("")
   const [price, setPrice] = useState(0)
   const [quantity, setQuantity] = useState(0)
 
-  const dispatch = useDispatch();
+  const { dispatch: productDispatch } = useContext(ProductContext)
+
 
   const toggleForm = () => {
     setVisibility(!isVisible)
@@ -17,16 +18,13 @@ const AddProductForm = ({onAddProduct, products, setProducts}) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let response = await SERVICES.handleAddProduct({
+    let newItem = {
       title: productName,
       price,
       quantity
-    });
+    }
 
-    dispatch({
-      type: "PRODUCT_ADDED",
-      addedProduct: response
-    });
+    productAddedToInventory(newItem, productDispatch)
 
     setProductName("");
     setPrice(0);

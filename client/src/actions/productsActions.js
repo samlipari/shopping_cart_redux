@@ -12,6 +12,13 @@ const productEditedSuccess = (response) => {
   return {type: "PRODUCT_EDITED", editedProduct: response};
 };
 
+const productAddedToInventorySuccess = (response) => {
+  return {
+    type: "PRODUCT_ADDED",
+    addedProduct: response
+  }
+}
+
 const productAddedToCartSuccess = (id, response) => {
   return {
     type: "PRODUCT_IN_CART",
@@ -21,32 +28,31 @@ const productAddedToCartSuccess = (id, response) => {
   };
 };
 
-export const productsReceived = () => {
-  return async (dispatch) => {
+
+export const productsReceived = async (dispatch) => {
     let response = await SERVICES.getProducts();
     dispatch(productsReceivedSuccess(response));
-  };
 };
 
-export const productsDeleted = (id) => {
-  return async (dispatch) => {
+export const productsDeleted = async (id, dispatch) => {
     let response = await SERVICES.handleDelete(id);
     if (response === 200) {
       dispatch(productDeletedSuccess(id));
     }
-  };
 };
 
-export const productEdited = (updatedProduct) => {
-  return async (dispatch) => {
-    let response = await SERVICES.handleEdit(updatedProduct);
-    dispatch(productEditedSuccess(response));
-  }
+export const productEdited = async (updatedProduct, dispatch) => {
+  let response = await SERVICES.handleEdit(updatedProduct);
+  dispatch(productEditedSuccess(response));
 }
 
-export const productAddedToCart = (id, products, cartItems) => {
-  return async (dispatch) => {
-    let response = await SERVICES.handleAddToCart(id, products, cartItems);
-    dispatch(productAddedToCartSuccess(id, response));
-  }
+export const productAddedToCart = async (id, products, cartItems, cartDispatch, prodDispatch) => {
+  let response = await SERVICES.handleAddToCart(id, products, cartItems);
+  cartDispatch(productAddedToCartSuccess(id, response));
+  prodDispatch(productAddedToCartSuccess(id, response));
+}
+
+export const productAddedToInventory = async (newItem, dispatch) => {
+    let response = await SERVICES.handleAddProduct(newItem);
+    dispatch(productAddedToInventorySuccess(response))
 }

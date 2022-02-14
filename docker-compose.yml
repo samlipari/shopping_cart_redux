@@ -1,0 +1,13 @@
+version: "3"
+services:
+  server:
+    image: mfatigati/shop-server
+    container_name: shop-server
+    ports:
+      - "4000:4000"
+  client:
+    image: mfatigati/shop-client
+    depends_on:
+      - server
+    ports:
+      - "3000:3000"

@@ -1,16 +1,19 @@
 import React from "react";
 import Product from "./Product"
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
 import { productsReceived } from "../actions/productsActions";
+import { ProductContext } from "../context/productsContext";
 
 const Inventory = () => {
-  const dispatch = useDispatch();
-  const products = useSelector((state) => state.products);
+                  // this dispatch variable stores the productReducer from the context file
+  const { products, dispatch: prodDispatch } = useContext(ProductContext)
 
   useEffect(() => {
-    dispatch(productsReceived());
-  }, [dispatch])
+    // calling our async function, and passing it our reducer,
+    // so that when the async API call is done, it can call our
+    // reducer with our action object populated by the results of that API call
+    productsReceived(prodDispatch);
+  }, [prodDispatch])
 
   return (
     <div class="product-listing">

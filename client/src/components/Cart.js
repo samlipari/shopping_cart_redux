@@ -1,18 +1,18 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
 import { getCartItems, cartCheckedOut } from "../actions/cartActions";
+import { CartContext } from "../context/cartContext";
 
 const Cart = () => {
-  const dispatch = useDispatch();
-  const cartItems = useSelector((state) => state.cartItems);
+
+  const { cartItems, dispatch: cartDispatch } = useContext(CartContext)
 
   useEffect(() => {
-    dispatch(getCartItems())
-  }, [dispatch]);
+    getCartItems(cartDispatch)
+  }, [cartDispatch]);
 
   const onCheckOut = () => {
-    dispatch(cartCheckedOut());
+    cartCheckedOut(cartDispatch);
   }
 
   if (cartItems.length === 0) {

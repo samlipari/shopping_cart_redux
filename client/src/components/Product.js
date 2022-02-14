@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import {useState} from "react"
-import { useDispatch, useSelector } from "react-redux";
 import { productsDeleted, productEdited, productAddedToCart } from "../actions/productsActions"
+import { ProductContext } from "../context/productsContext";
+import { CartContext } from "../context/cartContext";
 
 const Product = (props) => {
   const [productName, setProductName] = useState(props.title)
@@ -9,20 +10,19 @@ const Product = (props) => {
   const [quantity, setQuantity] = useState(props.quantity)
   const [isVisible, setEditVisibility] = useState(false)
 
-  const dispatch = useDispatch();
-  const products = useSelector((state) => state.products);
-  const cartItems = useSelector((state) => state.cartItems);
+  const {products, dispatch: prodDispatch} = useContext(ProductContext)
+  const {cartItems, dispatch: cartDispatch} = useContext(CartContext)
 
   const onDelete = (id) => {
-    dispatch(productsDeleted(id));
+    productsDeleted(id, prodDispatch);
   }
 
   const handleEdit = (updatedProduct) => {
-    dispatch(productEdited(updatedProduct));
+    productEdited(updatedProduct, prodDispatch);
   }
 
   const handleAddToCart = (id, products, cartItems) => {
-    dispatch(productAddedToCart(id, products, cartItems));
+    productAddedToCart(id, products, cartItems, cartDispatch, prodDispatch);
   }
 
   let updatedProduct = {
